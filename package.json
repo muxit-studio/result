@@ -1,0 +1,30 @@
+{
+  "name": "@muxit-studio/result",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "./dist",
+    "./package.json"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/muxit-studio/result"
+  },
+  "keywords": [],
+  "author": "Guilherme Rosado <guilherme@muxit.co>",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepublishOnly": "pnpm run build"
+  },
+  "devDependencies": {
+    "@tsconfig/node22": "^22.0.1",
+    "typescript": "^5.8.3"
+  }
+}

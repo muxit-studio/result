@@ -1,0 +1,43 @@
+# Build output
+dist/
+build/
+pnpm-output/
+
+# Dependencies
+node_modules/
+vendor/
+.npm/
+
+# Logs
+npm-debug.log*
+*.log
+
+# Environment variables
+.env
+.env.production
+.env.local
+.env.*.local
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Editor folders
+.idea/
+.vscode/
+
+# Cache and debug
+.eslintcache
+.cache/
+.debug/
+
+# Testing and coverage
+coverage/
+.nyc_output/
+__snapshots__/
+*.test.js.snap
+
+# Temporary files
+*.tmp
+.temp/
+tmp/

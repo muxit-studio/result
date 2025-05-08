@@ -1,0 +1,17 @@
+{
+	"$schema": "https://json.schemastore.org/tsconfig",
+	"extends": "@tsconfig/node22",
+	"compilerOptions": {
+		"resolveJsonModule": true,
+		"allowJs": true,
+		"isolatedModules": true,
+		"verbatimModuleSyntax": false,
+		"outDir": "./dist",
+		"rootDir": "./src",
+		"declaration": true,
+		"declarationMap": true,
+		"declarationDir": "./dist/types",
+		"sourceMap": true
+	},
+	"include": ["./src/**/*"]
+}

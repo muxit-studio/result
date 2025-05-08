@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+PATH="./node_modules/.bin:$PATH"
+
+[[ -f "./.env" ]] && source ./.env
+
+function build {
+  rm -rf ./dist
+  tsc --project ./tsconfig.json
+}
+
+function test {
+  node --import=tsx --test $(find ./src -name "*.test.ts")
+}
+
+function format {
+  prettier --write "src/**/*.{js,jsx,ts,tsx,astro,json,css,md}"
+}
+
+function help {
+  echo "$0 <task> <args>"
+  echo "Tasks:"
+  compgen -A function | cat -n
+}
+
+TIMEFORMAT="Task completed in %3lR"
+time "${@:-help}"
