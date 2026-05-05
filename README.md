@@ -47,7 +47,7 @@ type AuthEmailInvalid       = Error<"auth-email-invalid">
 type AuthEmailExists        = Error<"auth-email-exists">
 type AuthTokenExpired       = Error<"auth-token-expired">
 type AuthCodeMismatch       = Error<"auth-code-mismatch">
-type AuthError           = Error<"auth-error">
+type AuthError              = Error<"auth-error">
 ```
 
 ## Primary Pattern: Imperative Check and Return
@@ -61,12 +61,12 @@ recommended default for most code.
 import { type Error, ok, err } from "@muxit-studio/result"
 import * as v from "valibot"
 
-// --- Define domain errors ---
+// Define domain errors
 type AuthEmailInvalid = Error<"auth-email-invalid">
 type AuthEmailExists  = Error<"auth-email-exists">
-type AuthError     = Error<"auth-error">
+type AuthError        = Error<"auth-error">
 
-// --- Validation layer — returns Result ---
+// Validation layer: returns Result
 function validateEmail(input: string): Result<string, AuthEmailInvalid> {
 	const parsed = v.safeParse(v.pipe(v.string(), v.email()), input)
 	if (!parsed.success) {
@@ -79,7 +79,7 @@ function validateEmail(input: string): Result<string, AuthEmailInvalid> {
 	return ok(parsed.output)
 }
 
-// --- Database layer — returns Result via wrap ---
+// Database layer: — returns Result via wrap
 async function insertUser(email: string): Promise<Result<User, AuthEmailExists | AuthError>> {
 	return wrapAsync(
 		() => db.user.create({ data: { email } }),
@@ -92,7 +92,7 @@ async function insertUser(email: string): Promise<Result<User, AuthEmailExists |
 	)
 }
 
-// --- Compose them: check and propagate ---
+// Compose them: check and propagate
 async function registerUser(email: string): Promise<Result<User, AuthEmailInvalid | AuthEmailExists | AuthError>> {
 	const validEmail = validateEmail(email)
 	if (!validEmail.ok) return validEmail
@@ -151,10 +151,10 @@ type DbTimeout  = Error<"db-timeout">
 type DbGone     = Error<"db-connection-lost">
 type OrderError = Error<"order-unavailable">
 
-// Low-level — returns technical errors
+// Low-level: returns technical errors
 function findOrder(id: string): Result<Order, DbTimeout | DbGone>
 
-// Service layer — translates to domain error
+// Service layer: translates to domain error
 function getOrder(id: string): Result<Order, OrderError> {
 	return mapErr(findOrder(id), (dbErr) => ({
 		kind: "order-unavailable",
@@ -174,7 +174,7 @@ operations, Valibot/Zod parsing without `safeParse`:
 ```typescript
 import { wrap, wrapAsync } from "@muxit-studio/result"
 
-// Synchronous — JSON.parse
+// Synchronous: JSON.parse
 function parseConfig(raw: string): Result<AppConfig, Error<"parse-error">> {
 	return wrap(
 		() => JSON.parse(raw) as AppConfig,
@@ -182,7 +182,7 @@ function parseConfig(raw: string): Result<AppConfig, Error<"parse-error">> {
 	)
 }
 
-// Async — external API call
+// Async: external API call
 async function fetchRemoteConfig(): Promise<Result<AppConfig, Error<"fetch-error">>> {
 	return wrapAsync(
 		() => fetch("https://api.example.com/config").then((r) => r.json()),
