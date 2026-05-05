@@ -111,7 +111,7 @@ Key points:
 - The caller of `registerUser` can't forget to handle errors — the type enforces it
 - Unexpected errors (bugs) still throw — they aren't domain errors
 
-## `match` — Leaving the Result World
+## `match`
 
 `match` converts a `Result` into a concrete value by handling both branches. Use it at IO
 boundaries: HTTP handlers, CLI output, or anywhere you need a single return type.
@@ -141,7 +141,7 @@ router.post("/register", async (req) => {
 - The `switch` on `e.kind` is exhaustive — add a new error variant and you get a compile error
 - No default case needed; the compiler proves all variants are handled
 
-## `mapErr` — Translating Errors at Boundaries
+## `mapErr`
 
 When a low-level function returns technical errors, translate them into domain errors for
 the layer above:
@@ -166,7 +166,7 @@ function getOrder(id: string): Result<Order, OrderError> {
 
 The happy path passes through untouched. Only the error is transformed.
 
-## `wrap` / `wrapAsync` — Bridging Throw-Based APIs
+## `wrap` / `wrapAsync`
 
 Use `wrap` to safely call functions that may throw — third-party libs, `JSON.parse`, fs
 operations, Valibot/Zod parsing without `safeParse`:
@@ -191,7 +191,7 @@ async function fetchRemoteConfig(): Promise<Result<AppConfig, Error<"fetch-error
 }
 ```
 
-## `map` — Quick Inline Transformations
+## `map`
 
 Less commonly needed. Extracts or reshapes a success value without leaving the Result:
 
@@ -207,7 +207,7 @@ const plan = map(findActiveSubscription(userId), (sub) => sub.plan)
 
 Prefer the if-style when the transform is complex or when it improves readability.
 
-## `unwrap` — Only at the Top Level
+## `unwrap`
 
 `unwrap` extracts the value or throws the error. Use it only where there's no caller to
 propagate to:
@@ -272,18 +272,6 @@ test("valid registration succeeds", async () => {
 
 - **Don't overuse combinators.** If `map` or `mapErr` makes the code harder to read than
   an if-statement, use the if-statement.
-
-## Pattern Selection
-
-| Scenario | Use |
-|---|---|
-| Most business logic | `if (!result.ok) return result` |
-| HTTP handler, CLI output, render | `match` |
-| Error type translation at a service boundary | `mapErr` |
-| Calling throw-based third-party code | `wrap` / `wrapAsync` |
-| Tests | `assertNoError` / `assertError` |
-| Top-level entry point | `unwrap` (without default) |
-| Quick inline transform of a success value | `map` |
 
 ## License
 
