@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json.schemastore.org/tsconfig",
-	"extends": "@tsconfig/node22",
+	"extends": "@tsconfig/node24",
 	"compilerOptions": {
 		"resolveJsonModule": true,
 		"allowJs": true,
@@ -8,6 +8,7 @@
 		"verbatimModuleSyntax": false,
 		"outDir": "./dist",
 		"rootDir": "./src",
+		"noEmitOnError": true,
 		"declaration": true,
 		"declarationMap": true,
 		"declarationDir": "./dist/types",
