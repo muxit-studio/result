@@ -239,12 +239,13 @@ if (!result.ok) return redirect("/login")
 const user = result.value
 ```
 
-## `assertNoError` / `assertError` — Testing
+## `assertError` — Testing
 
-Type assertions that throw `AssertionError` with descriptive failure messages:
+Asserts that a `Result` is an error with a specific `kind`. Narrows the type so the error
+variant is fully accessible:
 
 ```typescript
-import { assertNoError, assertError } from "@muxit-studio/result"
+import { assertError } from "@muxit-studio/result"
 
 test("duplicate email returns auth-email-exists", async () => {
 	const result = await registerUser("existing@example.com")
@@ -252,12 +253,18 @@ test("duplicate email returns auth-email-exists", async () => {
 	// result.error is narrowed to AuthEmailExists
 	expect(result.error.message).toContain("already registered")
 })
+```
+
+For the success case, use `unwrap` — it returns the value on success and throws
+(which fails the test) on error:
+
+```typescript
+import { unwrap } from "@muxit-studio/result"
 
 test("valid registration succeeds", async () => {
 	const result = await registerUser("new@example.com")
-	assertNoError(result)
-	// result is narrowed to the success variant
-	expect(result.value.email).toBe("new@example.com")
+	const user = unwrap(result)
+	expect(user.email).toBe("new@example.com")
 })
 ```
 

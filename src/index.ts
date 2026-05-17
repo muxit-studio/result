@@ -1,6 +1,6 @@
-import {Error, assertError, assertNoError, isErr} from "./error.js";
+import {Error, assertError, isErr} from "./error.js";
 
-export {type Error, assertError, assertNoError, isErr};
+export {type Error, assertError, isErr};
 
 export type Result<T, E> = {ok: true; value: T; error: null} | {ok: false; value: null; error: E};
 

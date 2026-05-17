@@ -8,44 +8,6 @@ export type Error<T extends string = "unknown-error", C = unknown> = {
 };
 
 /**
- * Asserts that the Result is successful (ok: true).  If the Result is an
- * error, this function throws an informative AssertionError.  Narrows the
- * type of `result` to `Result<T, never>` (a successful result) in the
- * calling scope.
- *
- * @param result The Result object to check.
- * @param message Optional custom message prefix for the AssertionError.
- */
-export function assertNoError<T, E>(
-	result: Result<T, E>,
-	message: string = "assertNoError failed"
-): asserts result is {ok: true; value: T; error: null} {
-	if (!result.ok) {
-		let failureMessage = `${message}: Expected result to be ok, but it was an error.`;
-		if (isErr(result.error)) {
-			failureMessage += `\n  Kind: ${result.error.kind}`;
-			if (result.error.message) {
-				failureMessage += `\n  Message: ${result.error.message}`;
-			}
-			// Stringify cause cautiously
-			if (result.error.cause !== undefined) {
-				try {
-					failureMessage += `\n  Cause: ${JSON.stringify(result.error.cause)}`;
-				} catch {
-					failureMessage += `\n  Cause: [Could not stringify]`;
-				}
-			}
-		} else {
-			failureMessage += `\n  Error: ${result.error}`;
-		}
-		assert.fail(failureMessage);
-	}
-
-	// No need for the second assert(!result.error), as result.ok being
-	// true guarantees error is null by type def.
-}
-
-/**
  * Asserts that the Result is an error (ok: false) AND that the error has the
  * specified `kind`.  If the result is ok, or if the error kind does not match,
  * this function throws an informative AssertionError.  Narrows the type of
