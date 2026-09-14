@@ -1,11 +1,18 @@
 import assert from "node:assert";
-import {Result} from "./index.js";
+import { Result } from "./index.js";
 
 export type Error<T extends string = "unknown-error", C = unknown> = {
 	kind: T;
 	message?: string;
 	cause?: C;
 };
+
+export function formatError(error: { kind: string; message?: string }): string {
+	if (error.message) {
+		return `${error.kind}: ${error.message}`;
+	}
+	return error.kind;
+}
 
 /**
  * Asserts that the Result is an error (ok: false) AND that the error has the
@@ -19,10 +26,19 @@ export type Error<T extends string = "unknown-error", C = unknown> = {
 export function assertError<
 	T, // Value type (usually unknown/never in error cases)
 	E extends Error<string, unknown>, // Base error type in the Result
-	K extends E["kind"] // The specific error kind we are expecting
->(result: Result<T, E>, expectedKind: K): asserts result is {ok: false; value: null; error: Extract<E, {kind: K}>} {
+	K extends E["kind"], // The specific error kind we are expecting
+>(
+	result: Result<T, E>,
+	expectedKind: K,
+): asserts result is {
+	ok: false;
+	value: null;
+	error: Extract<E, { kind: K }>;
+} {
 	if (result.ok) {
-		assert.fail(`Expected result to be an error of kind '${expectedKind}', but it was ok.`);
+		assert.fail(
+			`Expected result to be an error of kind '${expectedKind}', but it was ok.`,
+		);
 	}
 
 	// If !result.ok, then result.error is guaranteed to exist by the
@@ -32,7 +48,7 @@ export function assertError<
 	if (actualKind !== expectedKind) {
 		assert.fail(
 			`Expected result error kind to be '${expectedKind}', but received '${actualKind}'.` +
-				`\n  Full Error: ${JSON.stringify(result.error, null, 2)}`
+				`\n  Full Error: ${JSON.stringify(result.error, null, 2)}`,
 		);
 	}
 

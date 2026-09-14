@@ -1,7 +1,6 @@
 # Build output
 dist/
 build/
-pnpm-output/
 
 # Dependencies
 node_modules/

@@ -20,11 +20,13 @@
 	"author": "Guilherme Rosado <guilherme@muxit.co>",
 	"license": "MIT",
 	"scripts": {
-		"prepublishOnly": "./Taskfile build"
+		"build": "rm -rf ./dist && tsc --project ./tsconfig.json",
+		"test": "node --test $(find ./src -name \"*.test.ts\")",
+		"prepublishOnly": "npm run build"
 	},
 	"devDependencies": {
-		"@tsconfig/node24": "^24.0.1",
-		"@types/node": "24.1.0",
-		"typescript": "^5.9.3"
+		"@tsconfig/node24": "24.0.5",
+		"@types/node": "24.13.3",
+		"typescript": "7.0.2"
 	}
 }

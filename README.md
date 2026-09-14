@@ -85,9 +85,9 @@ async function insertUser(email: string): Promise<Result<User, AuthEmailExists |
 		() => db.user.create({ data: { email } }),
 		(cause) => {
 			if (isDuplicateError(cause)) {
-				return err({ kind: "auth-email-exists", message: "Email already registered", cause })
+				return { kind: "auth-email-exists", message: "Email already registered", cause }
 			}
-			return err({ kind: "auth-error", message: "User creation failed", cause })
+			return { kind: "auth-error", message: "User creation failed", cause }
 		},
 	)
 }
@@ -178,7 +178,7 @@ import { wrap, wrapAsync } from "@muxit-studio/result"
 function parseConfig(raw: string): Result<AppConfig, Error<"parse-error">> {
 	return wrap(
 		() => JSON.parse(raw) as AppConfig,
-		(cause) => err({ kind: "parse-error", message: "Invalid config JSON", cause }),
+		(cause) => ({ kind: "parse-error", message: "Invalid config JSON", cause }),
 	)
 }
 
@@ -186,7 +186,7 @@ function parseConfig(raw: string): Result<AppConfig, Error<"parse-error">> {
 async function fetchRemoteConfig(): Promise<Result<AppConfig, Error<"fetch-error">>> {
 	return wrapAsync(
 		() => fetch("https://api.example.com/config").then((r) => r.json()),
-		(cause) => err({ kind: "fetch-error", message: "Failed to fetch config", cause }),
+		(cause) => ({ kind: "fetch-error", message: "Failed to fetch config", cause }),
 	)
 }
 ```
